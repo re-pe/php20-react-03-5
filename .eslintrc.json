@@ -1,0 +1,44 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": [
+        "plugin:react/recommended",
+        "airbnb",
+        "airbnb/hooks"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "sourceType": "module",
+        "allowImportExportEverywhere": false,
+        "ecmaVersion": 12,
+        "babelOptions": {
+            "configFile": "./babelrc"
+        }
+    },
+    "plugins": [
+        "react",
+        "@babel"
+    ],
+    "rules": {
+        "function-paren-newline": ["error", "consistent"],
+        "max-len": ["error", {
+            "code": 120,
+            "ignoreComments": true
+        }],
+        "indent": ["error", 4],
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-indent-props": ["error", 4],
+        "react/prop-types": [0],
+        "react/react-in-jsx-scope": [0]
+    },
+    "overrides": [{
+        "files": ["*.test.jsx", "*.spec.jsx", "*.test.js", "*.spec.js"],
+        "rules": {
+            "no-undef": "off"
+        }
+    }]
+
+}

@@ -1,13 +1,13 @@
-//import React from 'react';
+// import { Component } from 'react';
 import { useState } from 'react';
 import UserList from './user-list';
 import RegistrationForm from './registration-form';
-import Tags from '../helpers/tags'
+import Tags from '../helpers/tags';
 // const { br, div, form, h1, input, label } = Tags;
 const { div } = Tags;
 
 /**
- * 
+ *
  * class component version
  * To enable, uncomment 1-st line with React import
  */
@@ -16,93 +16,118 @@ const { div } = Tags;
 //         super(props);
 //         this.state = {
 //             userList: [],
-//             id: 0,
-//             name: '',
-//             surname: '',
-//             btnValue: 'Submit',
+//             userState: {
+//                 id: 0,
+//                 name: '',
+//                 surname: '',
+//             },
+//             // e slint-disable-next-line react/no-unused-state
+//             buttonValue: 'Submit',
 //         };
 //     }
 
 //     handleChange = (event) => {
-//         this.setState({ [event.target.name]: event.target.value });
-//     };
+//         const { userState } = this.state;
+//         this.setState({ userState: { ...userState, [event.target.name]: event.target.value } });
+//     }
 
 //     handleSubmit = (event) => {
 //         event.preventDefault();
-//         const userList = this.state.userList.filter(user => user.id !== this.state.id);
-//         const userData = {
-//             id: (this.state.id > 0) ? this.state.id : Date.now(),
-//             name: this.state.name,
-//             surname: this.state.surname,
-//         };
-//         userList.push(userData);
-//         userList.sort((prev, next) => prev.id - next.id);
-//         this.setState({ userList, id: 0, name: '', surname: '', btnValue: "Submit" });
-//     };
-
-//     deleteUser = (user_id) => this.setState({ userList: this.state.userList.filter(user => user.id !== user_id), });
-
-//     editUser = (user_id) => {
-//         const userData = this.state.userList.filter(user => (user.id === user_id))[0];
-//         const { id, name, surname } = userData;
-//         this.setState({
-//             id,
+//         const { userList, userState } = this.state;
+//         const { id, name, surname } = userState;
+//         const newUserList = (userState.id > 0)
+//             ? userList.filter((user) => user.id !== id)
+//             : userList;
+//         const newUserState = {
+//             id: (id > 0) ? id : Date.now(),
 //             name,
 //             surname,
-//             btnValue: "Update",
-//         })
-//     };
+//         };
+//         newUserList.push(newUserState);
+//         newUserList.sort((prev, next) => prev.id - next.id);
+//         const emptyUserState = { id: 0, name: '', surname: '' };
+//         this.setState({
+//             userList: newUserList,
+//             userState: emptyUserState,
+//             buttonValue: 'Submit',
+//         });
+//     }
+
+//     deleteUser = (userId) => {
+//         const { userList } = this.state;
+//         return this.setState({
+//             userList: userList.filter((user) => user.id !== userId),
+//         });
+//     }
+
+//     editUser = (userId) => {
+//         const { userList } = this.state;
+//         const userState = userList.filter((user) => (user.id === userId))[0];
+//         this.setState({
+//             userState,
+//             buttonValue: 'Update',
+//         });
+//     }
 
 //     render() {
+//         /* eslint-disable react/destructuring-assignment */
 //         return (
 //             <div className="container">
 //                 <div className="row">
 //                     <RegistrationForm
 //                         handleSubmit={this.handleSubmit}
-//                         userState={this.userState}
+//                         userState={this.state.userState}
 //                         handleChange={this.handleChange}
-//                         buttonValue={this.buttonValue} />
+//                         buttonValue={this.state.buttonValue}
+//                     />
 //                     <UserList
-//                         userList={this.userList}
+//                         userList={this.state.userList}
 //                         deleteUser={this.deleteUser}
-//                         editUser={this.editUser} />
+//                         editUser={this.editUser}
+//                         buttonValue={this.state.buttonValue}
+//                     />
 //                 </div>
 //             </div>
 //         );
+//         /* eslint-enable react/destructuring-assignment */
 //     }
 // }
 
 const Main = () => {
     const [userList, setUserList] = useState([]);
-    let [userState, setUserState] = useState({
+    const [userState, setUserState] = useState({
         id: 0,
         name: '',
         surname: '',
     });
     const [buttonValue, setButtonValue] = useState('Submit');
 
-    const handleChange = (event) => setUserState({ ...userState, [event.target.name]: event.target.value });
+    const handleChange = (event) => setUserState({
+        ...userState,
+        [event.target.name]: event.target.value,
+    });
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const list = (userState.id > 0) ?
-            userList.filter(user => user.id !== userState.id) :
-            userList;
-        list.push({
-            id: (userState.id > 0) ? userState.id : Date.now(),
-            name: userState.name,
-            surname: userState.surname,
+        const { id, name, surname } = userState;
+        const newUserList = (id > 0)
+            ? userList.filter((user) => user.id !== id)
+            : userList;
+        newUserList.push({
+            id: (id > 0) ? id : Date.now(),
+            name,
+            surname,
         });
-        list.sort((prev, next) => prev.id - next.id);
-        setUserList(list);
+        newUserList.sort((prev, next) => prev.id - next.id);
+        setUserList(newUserList);
         setUserState({ id: 0, name: '', surname: '' });
         setButtonValue('Submit');
     };
 
-    const deleteUser = (user_id) => setUserList(userList.filter(user => user.id !== user_id));
+    const deleteUser = (userId) => setUserList(userList.filter((user) => user.id !== userId));
 
-    const editUser = (user_id) => {
-        const userData = userList.filter(user => (user.id === user_id))[0];
+    const editUser = (userId) => {
+        const userData = userList.filter((user) => (user.id === userId))[0];
         setUserState({ id: userData.id, name: userData.name, surname: userData.surname });
         setButtonValue('Update');
     };
@@ -117,26 +142,35 @@ const Main = () => {
     //                 handleSubmit={handleSubmit}
     //                 userState={userState}
     //                 handleChange={handleChange}
-    //                 buttonValue={buttonValue} />
+    //                 buttonValue={buttonValue}
+    //             />
     //             <UserList
     //                 userList={userList}
     //                 deleteUser={deleteUser}
-    //                 editUser={editUser} />
+    //                 editUser={editUser}
+    //                 buttonValue={buttonValue}
+    //             />
     //         </div>
     //     </div>
     // );
 
-    /** 
+    /**
      * version w/o jsx
      */
     return (
-        div({ className: "container" },
-            div({ className: "row" },
-                RegistrationForm({ handleSubmit, userState, handleChange, buttonValue }),
-                UserList({ userList, deleteUser, editUser, buttonValue })
-            )
+        div(
+            { className: 'container' },
+            div(
+                { className: 'row' },
+                RegistrationForm({
+                    handleSubmit, userState, handleChange, buttonValue,
+                }),
+                UserList({
+                    userList, deleteUser, editUser, buttonValue,
+                }),
+            ),
         )
     );
-}
+};
 
 export default Main;
