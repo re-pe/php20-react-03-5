@@ -22,8 +22,27 @@
         "react",
         "@babel"
     ],
+    "settings": {
+        "react": {
+            "version": "latest"
+        }
+    },
     "rules": {
         "function-paren-newline": ["error", "consistent"],
+        "object-curly-newline": ["error", {
+            "ObjectExpression": {
+                "consistent": true
+            },
+            "ObjectPattern": {
+                "consistent": true
+            },
+            "ImportDeclaration": {
+                "consistent": true
+            },
+            "ExportDeclaration": {
+                "consistent": true
+            }
+        }],
         "max-len": ["error", {
             "code": 120,
             "ignoreComments": true
